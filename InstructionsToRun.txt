@@ -1,0 +1,17 @@
+Source code provided in “main.py” file attached to assignment submission.
+
+Instructions to run code:
+
+1.	Program was written in python 3 using PyCharm as the IDE.
+
+2.	Create new python 3 project in PyCharm with the main.py file I submitted. 
+
+3.	Add the Credit_N400_p9.csv file to a folder that is accessible. 
+	a.	NOTE: change the code on line 7 of main.py so that the folder path for pd.read_csv() matches where the .csv is located. 
+
+4.	Packages numpy, pandas, and matplotlib must be installed. PyCharm can automatically install these.
+
+5.	Run the program by clicking “Run”, or “Debug” in the top right corner of PyCharm.
+
+6.	When the Graphs pop up, close them in order for the program to continue running.
+
