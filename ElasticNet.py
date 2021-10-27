@@ -41,7 +41,7 @@ def standardize_data(df):
     return temp
 
 # Algorithm
-def algorithm(X, y, learning_rate, tuning_parameter):
+def algorithm(X, y, lamb, alpha):
 
     # Randomly initialize the parameter vector
     betas = np.random.uniform(-1, 1, size=9)
@@ -49,14 +49,13 @@ def algorithm(X, y, learning_rate, tuning_parameter):
     for i in range(1000):
         for k in range(len(betas)):
             Ak = np.dot(X[:, k].T, np.add(y - np.dot(X, betas), np.multiply(betas[k], X[:, k])))
-            betas[k] = (np.sign(Ak) * max(0, np.abs(Ak) - (learning_rate*(1-tuning_parameter)/2)) / np.add(b[k], learning_rate*tuning_parameter))
+            betas[k] = (np.sign(Ak) * max(0, np.abs(Ak) - (lamb * (1 - alpha) / 2)) / np.add(b[k], lamb * alpha))
 
     return betas
 
 # Global Variables
 X_headers = ['Income', 'Limit', 'Rating', 'Cards', 'Age', 'Education', 'Gender', 'Student', 'Married']
 Y_header = 'Balance'
-learningRateA = 10 ** -5
 
 tuning_parameters_lambda = []
 exponents = np.linspace(-2, 6, 9)
