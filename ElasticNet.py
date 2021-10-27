@@ -11,6 +11,25 @@ dataframe = dataframe.replace({'Gender': {'Male': 1, 'Female': 0},
                                'Student': {'Yes': 1, 'No': 0},
                                'Married': {'Yes': 1, 'No': 0}})
 
+def plot_graph_deliverable_1(data, alpha):
+    graph = pd.DataFrame(data)
+    graph.index = tuning_parameters_lambda
+    graph.columns = ['Income', 'Limit', 'Rating', 'Cards', 'Age', 'Education', 'Gender', 'Student', 'Married']
+    graph.plot()
+
+    plt.title('alpha = ' + str(alpha))
+    plt.xscale('log')
+    plt.xlabel('λ ')
+    plt.ylabel('P Features')
+
+    ax = plt.subplot(111)
+    box = ax.get_position()
+    ax.set_position([box.x0, box.y0, box.width * 0.8, box.height])
+    plt.legend(loc="center left", bbox_to_anchor=(1, 0.5))
+
+    plt.show()
+    return
+
 def center_data(df):
     temp = df - df.mean()
     return temp
@@ -29,7 +48,7 @@ def algorithm(X, y, learning_rate, tuning_parameter):
 
     for i in range(1000):
         for k in range(len(betas)):
-            Ak  = np.dot(X[:, k].T, np.add(y - np.dot(X, betas), np.multiply(betas[k], X[:, k])))
+            Ak = np.dot(X[:, k].T, np.add(y - np.dot(X, betas), np.multiply(betas[k], X[:, k])))
             betas[k] = (np.sign(Ak) * max(0, np.abs(Ak) - (learning_rate*(1-tuning_parameter)/2)) / np.add(b[k], learning_rate*tuning_parameter))
 
     return betas
@@ -60,24 +79,14 @@ X2 = np.square(X_numpy)
 b = X2.sum(axis=0)
 
 np.seterr(invalid='ignore')
-B_array = []
 count = 0
-for i, lamb in enumerate(tuning_parameters_lambda):
-    count += 1
-    print('Tuning parameter converged at = #{c} λ {} at alpha{α}\n'.format(lamb, c=count,  α=tuning_parameters_alpha[0]))
-    new_b = algorithm(X_numpy, Y_numpy, lamb, tuning_parameters_alpha[0])
-    B_array.append(new_b)
+for alpha in tuning_parameters_alpha:
+    B_array = []
+    for i, lamb in enumerate(tuning_parameters_lambda):
+        new_b = algorithm(X_numpy, Y_numpy, lamb, alpha)
+        B_array.append(new_b)
 
-dev1 = pd.DataFrame(B_array)
-dev1.index=tuning_parameters_lambda
-dev1.columns=['Income', 'Limit', 'Rating', 'Cards', 'Age', 'Education', 'Gender', 'Student', 'Married']
-plt.plot(dev1)
-plt.rcParams["figure.figsize"] = (16,10)
-plt.xscale('log')
-plt.xlabel('λ Tuning Params')
-plt.ylabel('p=9 features')
-plt.legend(loc='upper left')
-plt.show()
+    plot_graph_deliverable_1(B_array, alpha)
 
 plt.show()
 
