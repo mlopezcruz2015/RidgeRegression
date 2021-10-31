@@ -11,6 +11,7 @@ dataframe = dataframe.replace({'Gender': {'Male': 1, 'Female': 0},
                                'Student': {'Yes': 1, 'No': 0},
                                'Married': {'Yes': 1, 'No': 0}})
 
+
 def plot_graph_deliverable_1(data, alpha):
     graph = pd.DataFrame(data)
     graph.index = tuning_parameters_lambda
@@ -86,6 +87,7 @@ def cross_validation(dataframe, folds, lamb, alpha):
     MSE = MSE / 5
     return MSE
 
+
 # Global Variables
 X_headers = ['Income', 'Limit', 'Rating', 'Cards', 'Age', 'Education', 'Gender', 'Student', 'Married']
 Y_header = 'Balance'
@@ -111,16 +113,15 @@ X2 = np.square(X_numpy)
 b = X2.sum(axis=0)
 
 np.seterr(invalid='ignore')
-count = 0
+
+# Deliverable 1
 for alpha in tuning_parameters_alpha:
     B_array = []
     for i, lamb in enumerate(tuning_parameters_lambda):
         new_b = algorithm(X_numpy, Y_numpy, lamb, alpha)
         B_array.append(new_b)
 
-    #plot_graph_deliverable_1(B_array, alpha)
-
-
+    plot_graph_deliverable_1(B_array, alpha)
 
 folds = 5
 smallest_CV = 0
@@ -129,6 +130,7 @@ optimal_lambda = 0
 
 MSE_folds_array = []
 
+# Deliverable 2
 for alpha in tuning_parameters_alpha:
 
     MSE_folds = []
@@ -137,7 +139,6 @@ for alpha in tuning_parameters_alpha:
     for lamb in tuning_parameters_lambda:
         MSE = cross_validation(dataframe, folds, lamb, alpha)
 
-        #Deliverable 3
         if smallest_CV == 0 or MSE < smallest_CV:
             smallest_CV = MSE
             optimal_alpha = alpha
@@ -169,6 +170,7 @@ print("")
 print("Optimal Lambda and Alpha:")
 print(optimal_b)
 
+# Get Optimal Lambda for alpha=1
 optimal_lambda = 0
 smallest_CV = 0
 for lamb in tuning_parameters_lambda:
@@ -185,6 +187,7 @@ print("")
 print("Optimal Lambda for Alpha=1 and Alpha=1:")
 print(ridge_b)
 
+# Get Optimal Lambda for alpha=0
 optimal_lambda = 0
 smallest_CV = 0
 for lamb in tuning_parameters_lambda:
@@ -199,10 +202,6 @@ lasso_b = algorithm(X_numpy, Y_numpy, optimal_lambda, 0)
 print("")
 print("Optimal Lambda for Alpha=0 and Alpha=0:")
 print(lasso_b)
-
-
-
-plt.show()
 
 
 
