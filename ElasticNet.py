@@ -123,12 +123,11 @@ for alpha in tuning_parameters_alpha:
 
 
 folds = 5
-MSE_folds_array = []
 smallest_CV = 0
 optimal_alpha = 0
 optimal_lambda = 0
 
-indexes_array = []
+MSE_folds_array = []
 
 for alpha in tuning_parameters_alpha:
 
@@ -142,14 +141,12 @@ for alpha in tuning_parameters_alpha:
         if smallest_CV == 0 or MSE < smallest_CV:
             smallest_CV = MSE
             optimal_alpha = alpha
+            optimal_lambda = lamb
 
         MSE_folds.append(MSE)
-        indexes.append(lamb)
 
     MSE_folds_array.append(MSE_folds)
-    indexes_array.append(indexes)
 
-print(optimal_alpha)
 
 plt.xlabel("Lambda (10^x)")
 plt.ylabel("MSE")
@@ -160,6 +157,17 @@ plt.plot(pd.DataFrame(MSE_folds_array[3], index=exponents))
 plt.plot(pd.DataFrame(MSE_folds_array[4], index=exponents))
 plt.plot(pd.DataFrame(MSE_folds_array[5], index=exponents))
 plt.show()
+
+# Deliverable 3
+print(optimal_alpha)
+print(optimal_lambda)
+
+# Deliverable 4
+# Train using optimal values
+optimal_b = algorithm(X_numpy, Y_numpy, lamb, alpha)
+print(optimal_b)
+
+
 
 plt.show()
 
