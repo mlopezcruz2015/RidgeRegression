@@ -121,7 +121,7 @@ for alpha in tuning_parameters_alpha:
         new_b = algorithm(X_numpy, Y_numpy, lamb, alpha)
         B_array.append(new_b)
 
-    plot_graph_deliverable_1(B_array, alpha)
+    # plot_graph_deliverable_1(B_array, alpha)
 
 folds = 5
 smallest_CV = 0
