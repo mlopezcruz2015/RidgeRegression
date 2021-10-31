@@ -118,7 +118,7 @@ for alpha in tuning_parameters_alpha:
         new_b = algorithm(X_numpy, Y_numpy, lamb, alpha)
         B_array.append(new_b)
 
-    plot_graph_deliverable_1(B_array, alpha)
+    #plot_graph_deliverable_1(B_array, alpha)
 
 
 
@@ -159,13 +159,46 @@ plt.plot(pd.DataFrame(MSE_folds_array[5], index=exponents))
 plt.show()
 
 # Deliverable 3
-print(optimal_alpha)
-print(optimal_lambda)
+print("Optimal Alpha:" + str(optimal_alpha))
+print("Optimal Lambda:" + str(optimal_lambda))
 
 # Deliverable 4
 # Train using optimal values
-optimal_b = algorithm(X_numpy, Y_numpy, lamb, alpha)
+optimal_b = algorithm(X_numpy, Y_numpy, optimal_lambda, optimal_alpha)
+print("")
+print("Optimal Lambda and Alpha:")
 print(optimal_b)
+
+optimal_lambda = 0
+smallest_CV = 0
+for lamb in tuning_parameters_lambda:
+    MSE = cross_validation(dataframe, folds, lamb, 1)
+
+    # Deliverable 3
+    if smallest_CV == 0 or MSE < smallest_CV:
+        smallest_CV = MSE
+        optimal_lambda = lamb
+
+
+ridge_b = algorithm(X_numpy, Y_numpy, optimal_lambda, 1)
+print("")
+print("Optimal Lambda for Alpha=1 and Alpha=1:")
+print(ridge_b)
+
+optimal_lambda = 0
+smallest_CV = 0
+for lamb in tuning_parameters_lambda:
+    MSE = cross_validation(dataframe, folds, lamb, 0)
+
+    # Deliverable 3
+    if smallest_CV == 0 or MSE < smallest_CV:
+        smallest_CV = MSE
+        optimal_lambda = lamb
+
+lasso_b = algorithm(X_numpy, Y_numpy, optimal_lambda, 0)
+print("")
+print("Optimal Lambda for Alpha=0 and Alpha=0:")
+print(lasso_b)
 
 
 
