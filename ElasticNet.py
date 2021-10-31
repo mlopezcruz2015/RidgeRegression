@@ -53,6 +53,39 @@ def algorithm(X, y, lamb, alpha):
 
     return betas
 
+def cross_validation(dataframe, folds, lamb, alpha):
+    shuffled_data = dataframe.sample(frac=1).reset_index(drop=True)
+    split_array = np.array_split(shuffled_data,folds)
+    MSE = 0
+
+    for i in range(folds):
+        err = 0
+
+        validation_set = split_array[i]
+        training_set = pd.concat([shuffled_data, validation_set]).drop_duplicates(keep=False)
+
+        X_train = training_set[X_headers]
+        X_train = standardize_data(X_train).to_numpy()
+
+        Y_train = training_set[Y_header]
+        Y_train = center_data(Y_train).to_numpy()
+
+        X_test = validation_set[X_headers]
+        X_test = standardize_data(X_test).to_numpy()
+
+        Y_test = validation_set[Y_header]
+        Y_test = center_data(Y_test).to_numpy()
+
+        B = algorithm(X_train, Y_train, lamb, alpha)
+
+        n = len(Y_test)
+        for x in range(n):
+            err += (Y_test[x] - np.dot(X_test[x], B)) ** 2
+        MSE = MSE + err / n
+
+    MSE = MSE / 5
+    return MSE
+
 # Global Variables
 X_headers = ['Income', 'Limit', 'Rating', 'Cards', 'Age', 'Education', 'Gender', 'Student', 'Married']
 Y_header = 'Balance'
@@ -86,6 +119,47 @@ for alpha in tuning_parameters_alpha:
         B_array.append(new_b)
 
     plot_graph_deliverable_1(B_array, alpha)
+
+
+
+folds = 5
+MSE_folds_array = []
+smallest_CV = 0
+optimal_alpha = 0
+optimal_lambda = 0
+
+indexes_array = []
+
+for alpha in tuning_parameters_alpha:
+
+    MSE_folds = []
+    indexes = []
+
+    for lamb in tuning_parameters_lambda:
+        MSE = cross_validation(dataframe, folds, lamb, alpha)
+
+        #Deliverable 3
+        if smallest_CV == 0 or MSE < smallest_CV:
+            smallest_CV = MSE
+            optimal_alpha = alpha
+
+        MSE_folds.append(MSE)
+        indexes.append(lamb)
+
+    MSE_folds_array.append(MSE_folds)
+    indexes_array.append(indexes)
+
+print(optimal_alpha)
+
+plt.xlabel("Lambda (10^x)")
+plt.ylabel("MSE")
+plt.plot(pd.DataFrame(MSE_folds_array[0], index=exponents))
+plt.plot(pd.DataFrame(MSE_folds_array[1], index=exponents))
+plt.plot(pd.DataFrame(MSE_folds_array[2], index=exponents))
+plt.plot(pd.DataFrame(MSE_folds_array[3], index=exponents))
+plt.plot(pd.DataFrame(MSE_folds_array[4], index=exponents))
+plt.plot(pd.DataFrame(MSE_folds_array[5], index=exponents))
+plt.show()
 
 plt.show()
 
